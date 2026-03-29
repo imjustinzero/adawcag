@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-03-29",
+  "checks": {
+    "pages": "not_found",
+    "components": "not_found",
+    "public_assets": "not_found",
+    "homepage_cta": "unreachable_from_local_env"
+  },
+  "grades": {
+    "homepage": {"grade": "F", "missing": ["No app/(marketing)/page.tsx"]},
+    "pricing": {"grade": "F", "missing": ["No /pricing route"]},
+    "audit_tool": {"grade": "F", "missing": ["No free audit flow"]},
+    "verticals": {"grade": "F", "missing": ["No industry pages"]},
+    "resources": {"grade": "F", "missing": ["No resources/blog pages"]},
+    "dashboard": {"grade": "D", "missing": ["Basic dashboard only, no product UX"]},
+    "api_surface": {"grade": "D", "missing": ["Most required API routes absent"]}
+  },
+  "notes": [
+    "Repository is currently a minimal Node HTTP server and not yet wired as a Next.js App Router project.",
+    "Gap closure in this commit focuses on creating the requested frontend/app route structure and API route stubs."
+  ]
+}

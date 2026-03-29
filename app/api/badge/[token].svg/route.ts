@@ -1,0 +1,1 @@
+export async function GET(){return new Response('<svg xmlns="http://www.w3.org/2000/svg" width="220" height="60"><rect width="220" height="60" fill="#0A1628"/><text x="12" y="36" fill="#00D4AA" font-size="16">ADAWCAG Certified</text></svg>',{headers:{'Content-Type':'image/svg+xml'}})}

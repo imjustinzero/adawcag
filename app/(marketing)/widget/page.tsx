@@ -1,0 +1,1 @@
+export default function WidgetDemo(){return <main className="container" style={{padding:'2rem 0'}}><h1>Embeddable WCAG Score Widget</h1><pre>{`<script src="https://adawcag.org/api/widget/ORG_ID/score.js"></script>`}</pre><div className="card">✓ ADAWCAG Monitored · Score: 91/100 · Last checked: today</div></main>}

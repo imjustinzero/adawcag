@@ -1,0 +1,1 @@
+export default function DashboardPage(){return <main className="container" style={{padding:'2rem 0'}}><h1>Dashboard Command Center</h1><div className="card">Plan-aware dashboard placeholders for Starter, Agency, and Enterprise views.</div></main>}

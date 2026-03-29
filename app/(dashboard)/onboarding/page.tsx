@@ -1,0 +1,1 @@
+export default function OnboardingPage(){return <main className="container" style={{padding:'2rem 0'}}><h1>Onboarding</h1><ol><li>Welcome + URL</li><li>Organization profile</li><li>First scan</li><li>Results</li><li>Invite team</li></ol></main>}

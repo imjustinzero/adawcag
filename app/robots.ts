@@ -1,0 +1,1 @@
+export default function robots(){return {rules:[{userAgent:'*',allow:'/',disallow:['/dashboard/','/internal/','/api/']}],sitemap:'https://adawcag.org/sitemap.xml'};}

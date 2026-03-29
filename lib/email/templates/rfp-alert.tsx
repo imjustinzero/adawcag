@@ -1,3 +1,1 @@
-export function templaterfp_alert(): string {
-  return 'rfp-alert template placeholder';
-}
+export function RfpAlertEmail(){return (<div style={{fontFamily:'Arial',background:'#040C18',color:'#F0F4FF',padding:'24px'}}><h1 style={{color:'#00D4AA'}}>ADAWCAG.org</h1><p>rfp-alert notification template.</p><p><a href="#" style={{color:'#00D4AA'}}>Unsubscribe</a></p></div>);}

@@ -1,0 +1,1 @@
+export function ScanCompleteEmail(){return (<div style={{fontFamily:'Arial',background:'#040C18',color:'#F0F4FF',padding:'24px'}}><h1 style={{color:'#00D4AA'}}>ADAWCAG.org</h1><p>scan-complete notification template.</p><p><a href="#" style={{color:'#00D4AA'}}>Unsubscribe</a></p></div>);}
