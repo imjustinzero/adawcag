@@ -1,0 +1,1 @@
+export default function Page(){return <main className="container" style={padding:'2rem 0'}><h1>Api</h1><div className="card">Configuration UI scaffold.</div></main>}
