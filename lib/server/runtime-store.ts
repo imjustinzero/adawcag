@@ -48,6 +48,21 @@ export const ipScanCounter = new Map<string, number[]>();
 export const domainScanCounter = new Map<string, number>();
 export const rateLimitViolations: Array<{ ip: string; reason: string; createdAt: number }> = [];
 
+
+const redisStore = new Map<string, string>();
+
+export const redis = {
+  async get(key: string): Promise<string | null> {
+    return redisStore.get(key) ?? null;
+  },
+  async setex(key: string, _ttl: number, value: string): Promise<void> {
+    redisStore.set(key, value);
+  },
+  async set(key: string, value: string): Promise<void> {
+    redisStore.set(key, value);
+  },
+};
+
 export const scrapeUsage = {
   google: { requestsThisSecond: 0, secondBucket: 0 },
   yelp: { dailyCalls: 0, dayBucket: '' },

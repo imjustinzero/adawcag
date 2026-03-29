@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkFreeAuditRateLimit } from '@/lib/security/rate-limit';
 import { sanitizeScanUrl } from '@/lib/security/url-sanitizer';
 import { enqueueScan } from '@/lib/server/runtime-store';
+import { validateScanTarget } from '@/lib/security/ssrf-protection';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const body = await request.json().catch(() => ({}));
@@ -14,6 +15,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const scanUrl = sanitizeScanUrl(rawUrl);
   if (!scanUrl) {
     return NextResponse.json({ error: 'INVALID_SCAN_URL', message: 'Only public http(s) URLs are allowed.' }, { status: 400 });
+  }
+
+  const targetSafety = await validateScanTarget(scanUrl);
+  if (!targetSafety.safe) {
+    return NextResponse.json({ error: 'UNSAFE_SCAN_TARGET', message: targetSafety.reason }, { status: 400 });
   }
 
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';

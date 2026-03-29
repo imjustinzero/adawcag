@@ -1,0 +1,15 @@
+export const CACHE_TTL = {
+  adaCases: 60 * 60 * 24 * 30,
+  pricingPlans: 60 * 60 * 24,
+  certificationBadge: 60 * 60,
+  orgSettings: 60 * 15,
+  orgPlan: 60 * 15,
+  staffProfile: 60 * 30,
+  scanResults: 60 * 5,
+  dashboardStats: 60 * 2,
+  leadList: 60,
+  intelligenceFeed: 30,
+  notifications: 0,
+  liveScanning: 0,
+  stripeWebhooks: 0,
+} as const;

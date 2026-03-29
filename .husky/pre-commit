@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx tsc --noEmit
+npx eslint . --ext .ts,.tsx --max-warnings 0
+npx prettier --check .
+npx vitest run --reporter=verbose
+npm audit --audit-level=high
