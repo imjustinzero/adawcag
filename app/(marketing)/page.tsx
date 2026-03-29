@@ -19,6 +19,11 @@ WCAG score: 41/100 ⚠️`}</pre></div>
       <section id="how" className="container" style={{ padding: '2rem 0', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1rem' }}>
         {['Scan','Prioritize','Prove'].map((s, i) => <article key={s} className="card"><h3>{i+1}. {s}</h3><p>Focused workflow for compliance teams and counsel.</p></article>)}
       </section>
+
+      <section className="container" style={{ paddingBottom: '2rem', display: 'flex', gap: '.75rem' }}>
+        <a className="btn btn-ghost" href="/benchmark">View Benchmark</a>
+        <a className="btn btn-ghost" href="/research">Research Program</a>
+      </section>
     </main>
   );
 }

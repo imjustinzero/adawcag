@@ -1,3 +1,5 @@
+import { knowledgePlatformFunctions } from '@/inngest/knowledge-platform';
+
 export const inngestFunctions = [
   'preScanLead',
   'processDeployGate',
@@ -19,5 +21,6 @@ export const inngestFunctions = [
   'killStuckScansCron',
   'processWebhookRetries',
   'dailyBackupExport',
-  'pdfGenerationWorker'
+  'pdfGenerationWorker',
+  ...knowledgePlatformFunctions.map((fn) => fn.id),
 ] as const;

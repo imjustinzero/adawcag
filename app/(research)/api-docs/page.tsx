@@ -1,0 +1,1 @@
+export default function ResearchApiDocsPage() { return <main className="container" style={{padding:'2rem 0'}}><h1>Research API Docs</h1><p>Auth: X-Research-Key header. Rate limit: 10,000/day.</p></main>; }
