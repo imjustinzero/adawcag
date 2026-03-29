@@ -7,6 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+<<<<<< codex/add-certification-renewal-and-install-tracking
+model AccessibilityCertification {
+  id           String   @id @default(cuid())
+  tenantId      String
+  status        String   @default("active")
+  expiresAt     DateTime
+  renewedAt     DateTime?
+  stripeSubId   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model InstallEvent {
+  id        String   @id @default(cuid())
+  tenantId  String?
+  source    String
+  version   String?
+  userAgent String?
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  @@index([source])
+  @@index([createdAt])
+=
 model Billing {
   id         String   @id @default(cuid())
   customerId String   @unique
@@ -14,4 +38,5 @@ model Billing {
   plan       String   @default("")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+>>>>>> main
 }
