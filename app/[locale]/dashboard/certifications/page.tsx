@@ -14,7 +14,11 @@ function needsRenewal(expiresAtIso: string) {
   return daysRemaining <= 30;
 }
 
-export default function CertificationsPage() {
+export default function CertificationsPage({
+  params,
+}: {
+  params: { locale: string };
+}) {
   const certifications: Certification[] = [];
 
   return (
@@ -33,7 +37,7 @@ export default function CertificationsPage() {
             <p>Expires: {new Date(cert.expiresAt).toLocaleDateString()}</p>
 
             {needsRenewal(cert.expiresAt) && (
-              <form method="POST" action="/api/stripe/checkout" className="mt-3">
+              <form method="POST" action={`/${params.locale}/api/stripe/checkout`} className="mt-3">
                 <input type="hidden" name="plan" value="cert_renewal" />
                 <button type="submit" className="rounded bg-black px-3 py-2 text-white">
                   Renew — $299/qtr

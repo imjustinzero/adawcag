@@ -1,5 +1,9 @@
-async function getInstallData() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/api/admin/installs`, {
+function appBaseUrl() {
+  return process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? "http://localhost:3000";
+}
+
+async function getInstallData(locale: string) {
+  const response = await fetch(`${appBaseUrl()}/${locale}/api/admin/installs`, {
     headers: { "x-admin": "true" },
     cache: "no-store",
   });
@@ -19,8 +23,8 @@ function sparkline(values: number[]) {
     .join("");
 }
 
-export default async function AdminInstallsPage() {
-  const data = await getInstallData();
+export default async function AdminInstallsPage({ params }: { params: { locale: string } }) {
+  const data = await getInstallData(params.locale);
   const trendValues = (data.trend ?? []).map((d: { count: number }) => d.count);
 
   return (

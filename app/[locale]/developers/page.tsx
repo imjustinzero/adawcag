@@ -1,5 +1,9 @@
-async function getInstallStats() {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? ""}/api/install/stats`, {
+function appBaseUrl() {
+  return process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL ?? "http://localhost:3000";
+}
+
+async function getInstallStats(locale: string) {
+  const response = await fetch(`${appBaseUrl()}/${locale}/api/install/stats`, {
     next: { revalidate: 3600 },
   });
 
@@ -10,8 +14,8 @@ async function getInstallStats() {
   return response.json();
 }
 
-export default async function DevelopersPage() {
-  const stats = await getInstallStats();
+export default async function DevelopersPage({ params }: { params: { locale: string } }) {
+  const stats = await getInstallStats(params.locale);
 
   return (
     <div className="space-y-6">
