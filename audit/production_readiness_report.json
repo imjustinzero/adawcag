@@ -1,0 +1,12 @@
+{
+  "score": "30/40",
+  "blockers": [
+    "Dependency and lockfile updates are required before npm audit and automated coverage can run.",
+    "Runtime integrations for Upstash, Sentry, OpenTelemetry, and external monitors require environment-level configuration."
+  ],
+  "warnings": [
+    "Deep health checks currently use scaffold checks and should be wired to real providers.",
+    "CI workflow assumes Next.js build scripts not yet present in package.json."
+  ],
+  "certified_ready": false
+}
