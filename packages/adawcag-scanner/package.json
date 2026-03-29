@@ -1,0 +1,7 @@
+{
+  "name": "@adawcag/scanner",
+  "version": "1.0.0",
+  "description": "WCAG 2.1 accessibility scanner for CI/CD pipelines",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts"
+}
