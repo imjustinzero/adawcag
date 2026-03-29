@@ -1,0 +1,1 @@
+export default async function ScanPage({ params }: { params: Promise<{ scanId: string }>}) { const { scanId } = await params; return <main className="container" style={{padding:'2rem 0'}}><h1>Scan #{scanId}</h1><section className="card"><h2>WCAG 2.1 AA Score: 41</h2><p>Critical 3 · Serious 8 · Moderate 12 · Minor 7</p></section></main>}

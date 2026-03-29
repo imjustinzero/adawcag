@@ -1,0 +1,1 @@
+export default function sitemap(){return ['/','/pricing','/audit','/resources','/government','/enterprise','/law-firms','/healthcare','/restaurants','/ecommerce'].map((url)=>({url:`https://adawcag.org${url}`,lastModified:new Date()}));}
