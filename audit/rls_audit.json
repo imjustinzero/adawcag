@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-03-29T00:00:00.000Z",
+  "source": "migration_static_analysis",
+  "status": "pass_with_assumptions",
+  "notes": [
+    "Repository has no live Postgres connection in this environment, so pg_tables query could not be executed.",
+    "Migration 012_backend_security_hardening.sql enforces ENABLE + FORCE RLS for all public tables."
+  ],
+  "checks": [
+    { "table": "*", "rowsecurity": true, "result": "pass", "detail": "DO block enables RLS on every public table" },
+    { "table": "webhook_failures", "rowsecurity": true, "result": "pass", "detail": "org isolation policy added" },
+    { "table": "stripe_events", "rowsecurity": true, "result": "pass", "detail": "staff-only policy added" },
+    { "table": "scrape_failures", "rowsecurity": true, "result": "pass", "detail": "org isolation policy added" },
+    { "table": "rate_limit_violations", "rowsecurity": true, "result": "pass", "detail": "staff-only policy added" }
+  ]
+}

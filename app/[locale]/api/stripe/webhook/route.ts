@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { mapAmountToPlan } from '@/lib/billing/plan';
 import { getBillingByCustomer, upsertBillingByCustomer } from '@/lib/billing/store';
+import { processedStripeEvents } from '@/lib/server/runtime-store';
 
 type StripeEvent = {
+  id?: string;
   type: string;
   data?: {
     object?: any;
@@ -15,8 +17,12 @@ function getSubscriptionUnitAmount(session: any): number | null {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const event = (await req.json().catch(() => null)) as StripeEvent | null;
-  if (!event?.type) {
+  if (!event?.type || !event.id) {
     return NextResponse.json({ error: 'INVALID_EVENT' }, { status: 400 });
+  }
+
+  if (processedStripeEvents.has(event.id)) {
+    return NextResponse.json({ ok: true, ignored: true, reason: 'ALREADY_PROCESSED' });
   }
 
   if (event.type === 'checkout.session.completed') {
@@ -29,6 +35,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const amount = getSubscriptionUnitAmount(session);
     const plan = mapAmountToPlan(amount);
     const billing = upsertBillingByCustomer(customerId, { active: true, plan });
+    processedStripeEvents.add(event.id);
 
     return NextResponse.json({ ok: true, customerId, billing });
   }
@@ -43,9 +50,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const current = getBillingByCustomer(customerId);
     const isActive = ['active', 'trialing'].includes(String(subscription?.status ?? ''));
     const billing = upsertBillingByCustomer(customerId, { active: isActive, plan: current.plan });
+    processedStripeEvents.add(event.id);
 
     return NextResponse.json({ ok: true, customerId, billing });
   }
 
+  processedStripeEvents.add(event.id);
   return NextResponse.json({ ok: true, ignored: event.type });
 }

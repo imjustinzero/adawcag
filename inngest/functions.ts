@@ -14,5 +14,10 @@ export const inngestFunctions = [
   'notifyDevelopersNewJob',
   'processMarketplacePayment',
   'copilotEmergencyMode',
-  'copilotWeeklyBrief'
+  'copilotWeeklyBrief',
+  'processScanQueue',
+  'killStuckScansCron',
+  'processWebhookRetries',
+  'dailyBackupExport',
+  'pdfGenerationWorker'
 ] as const;
