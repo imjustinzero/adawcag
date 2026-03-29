@@ -1,0 +1,11 @@
+{
+  "name": "adawcag-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal site with domain-based admin access and sales/enterprise routes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js"
+  }
+}
