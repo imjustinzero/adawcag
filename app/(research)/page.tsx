@@ -1,0 +1,1 @@
+export default function ResearchDashboardPage() { return <main className="container" style={{padding:'2rem 0'}}><h1>Researcher Dashboard</h1><p>Approved researchers can access aggregate datasets and export jobs.</p></main>; }
