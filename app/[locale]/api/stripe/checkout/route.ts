@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const PLAN_LINKS: Record<string, string> = {
-  cert_renewal: process.env.STRIPE_CERT_RENEWAL_LINK ?? 'https://buy.stripe.com/cert_renewal_placeholder',
-  starter_lite: 'https://buy.stripe.com/3cI4gAggwfLnbrH2Jp8g00g',
-  single: '',
-  pro: '',
-  agency: '',
-  contracts_addon: '',
+const PLAN_LINKS: Record<string, string> = {
+  starter: process.env.STRIPE_STARTER_LINK ?? '',
+  professional: process.env.STRIPE_PROFESSIONAL_LINK ?? '',
+  agency: process.env.STRIPE_AGENCY_LINK ?? '',
+  enterprise: process.env.STRIPE_ENTERPRISE_LINK ?? '',
+  cert_renewal: process.env.STRIPE_CERT_RENEWAL_LINK ?? '',
+};
+
+const PLAN_PRICE_IDS: Record<string, string> = {
+  starter: process.env.STRIPE_STARTER_PRICE_ID ?? '',
+  professional: process.env.STRIPE_PRO_PRICE_ID ?? '',
+  agency: process.env.STRIPE_AGENCY_PRICE_ID ?? '',
+  enterprise: process.env.STRIPE_ENTERPRISE_PRICE_ID ?? '',
 };
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -29,16 +35,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const link = PLAN_LINKS[plan];
   if (!link) {
-    return NextResponse.json({ error: 'PLAN_NOT_FOUND' }, { status: 404 });
+    return NextResponse.json({ error: 'PLAN_NOT_FOUND_OR_NOT_CONFIGURED', plan }, { status: 404 });
   }
 
   const checkoutUrl = new URL(link);
   if (tenantId) checkoutUrl.searchParams.set('client_reference_id', tenantId);
   if (email) checkoutUrl.searchParams.set('prefilled_email', email);
+  checkoutUrl.searchParams.set('metadata_plan', plan);
+  checkoutUrl.searchParams.set('metadata_priceId', PLAN_PRICE_IDS[plan] ?? '');
+  checkoutUrl.searchParams.set('success_url', `${request.nextUrl.origin}/dashboard?checkout=success&plan=${plan}`);
+  checkoutUrl.searchParams.set('cancel_url', `${request.nextUrl.origin}/en/pricing?checkout=cancelled&plan=${plan}`);
 
   if (!contentType.includes('application/json')) {
     return NextResponse.redirect(checkoutUrl, { status: 303 });
   }
 
-  return NextResponse.json({ url: checkoutUrl.toString(), plan });
+  return NextResponse.json({ url: checkoutUrl.toString(), plan, priceId: PLAN_PRICE_IDS[plan] ?? null });
 }
