@@ -9,34 +9,32 @@ export default function AdminMarketplacePage({ searchParams }: { searchParams?: 
 
   return (
     <section>
-      <h1>Marketplace Developers</h1>
-      {pending > 0 && (
-        <div style={{ marginBottom: 12, padding: 12, background: '#fff3cd', borderRadius: 8 }}>
-          {pending} developers pending review.
-        </div>
-      )}
-      <p>
-        Filters:{' '}
-        {['pending', 'active', 'rejected'].map((value) => (
-          <a key={value} href={`?status=${value}`} style={{ marginRight: 12 }}>{value}</a>
-        ))}
-      </p>
+      <h1>Marketplace Applications</h1>
+      {pending > 0 && <div style={{ marginBottom: 12, padding: 12, background: '#fff3cd', borderRadius: 8 }}>{pending} applications pending review.</div>}
+
+      <form method="post" action="/api/admin/marketplace" style={{ marginBottom: 12 }}>
+        <input type="hidden" name="action" value="bulk-approve" />
+        {filtered.filter((dev) => dev.status === 'pending').map((dev) => <input key={dev.id} type="hidden" name="developerIds" value={dev.id} />)}
+        <button type="submit" disabled={pending === 0}>Bulk approve pending</button>
+      </form>
+
+      <p>Filters: {['pending', 'active', 'rejected'].map((value) => <a key={value} href={`?status=${value}`} style={{ marginRight: 12 }}>{value}</a>)}</p>
 
       <table>
         <thead>
           <tr>
-            <th>Name</th><th>Email</th><th>Skills</th><th>Rate</th><th>Status</th><th>Verified</th><th>Actions</th>
+            <th>Applicant</th><th>Company</th><th>Email</th><th>Submitted</th><th>Status</th><th>API Key</th><th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {filtered.map((dev) => (
             <tr key={dev.id}>
               <td>{dev.name}</td>
+              <td>{dev.company}</td>
               <td>{dev.email}</td>
-              <td>{dev.skills.join(', ')}</td>
-              <td>${dev.hourlyRate}/hr</td>
+              <td>{new Date(dev.submittedDate).toLocaleDateString()}</td>
               <td>{dev.status}</td>
-              <td>{dev.verified ? '✅' : '—'}</td>
+              <td>{dev.apiKey ? '✅ Issued' : '—'}</td>
               <td>
                 <form method="post" action="/api/admin/marketplace" style={{ display: 'inline-block', marginRight: 8 }}>
                   <input type="hidden" name="developerId" value={dev.id} />
