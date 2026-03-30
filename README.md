@@ -36,3 +36,7 @@ Deprecated (keep in local env files for backward compatibility until cleanup):
 Resend setup reminder:
 - Add SPF, DKIM, and DMARC records provided by Resend.
 - Verify `adawcag.org` in Resend before production sends.
+## Strategy
+
+- Master roadmap document: `docs/master-upgrade-codex-v2.md`.
+
