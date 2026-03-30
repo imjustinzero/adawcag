@@ -1,4 +1,4 @@
-import { certifications, CertificationStatus } from '@/lib/admin/data-store';
+import { certificateReviewQueue, certifications, CertificationStatus } from '@/lib/admin/data-store';
 
 type SearchParams = { status?: CertificationStatus };
 
@@ -22,34 +22,39 @@ export default function AdminCertificationsPage({ searchParams }: { searchParams
       <h1>Certifications</h1>
       <p style={badgeStyle}>{activeCount} Active / {expiringThisWeek} Expiring This Week</p>
 
-      {expiringThisWeek > 0 && (
-        <div style={{ margin: '12px 0', padding: 12, borderRadius: 8, background: '#fff3cd' }}>
-          ⚠️ {expiringThisWeek} certification(s) expire in the next 7 days.
-        </div>
-      )}
+      <h2 style={{ marginTop: 24 }}>Certificates Awaiting Review</h2>
+      <table>
+        <thead>
+          <tr><th>Tenant</th><th>Site URL</th><th>Score</th><th>Scan Date</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {certificateReviewQueue.map((task) => (
+            <tr key={task.id}>
+              <td>{task.tenantName}</td>
+              <td>{task.siteUrl}</td>
+              <td>{task.score}</td>
+              <td>{new Date(task.scanDate).toLocaleDateString()}</td>
+              <td>
+                <button style={{ marginRight: 8 }}>Countersign & Activate</button>
+                <button>Flag for Manual Review</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      <p>
-        Filters:{' '}
-        {['active', 'conditional', 'suspended', 'expired'].map((value) => (
-          <a key={value} href={`?status=${value}`} style={{ marginRight: 12 }}>{value}</a>
-        ))}
-      </p>
+      {expiringThisWeek > 0 && <div style={{ margin: '12px 0', padding: 12, borderRadius: 8, background: '#fff3cd' }}>⚠️ {expiringThisWeek} certification(s) expire in the next 7 days.</div>}
+
+      <p>Filters: {['active', 'conditional', 'suspended', 'expired'].map((value) => <a key={value} href={`?status=${value}`} style={{ marginRight: 12 }}>{value}</a>)}</p>
 
       <table>
         <thead>
-          <tr>
-            <th>Tenant</th><th>Domain</th><th>Status</th><th>Issued</th><th>Expires</th><th>Lighthouse</th>
-          </tr>
+          <tr><th>Tenant</th><th>Domain</th><th>Status</th><th>Issued</th><th>Expires</th><th>Lighthouse</th></tr>
         </thead>
         <tbody>
           {filtered.map((cert) => (
             <tr key={cert.id}>
-              <td>{cert.tenantName}</td>
-              <td>{cert.domain}</td>
-              <td>{cert.status}</td>
-              <td>{new Date(cert.issuedAt).toLocaleDateString()}</td>
-              <td>{new Date(cert.expiresAt).toLocaleDateString()}</td>
-              <td>{cert.lighthouseScore}</td>
+              <td>{cert.tenantName}</td><td>{cert.domain}</td><td>{cert.status}</td><td>{new Date(cert.issuedAt).toLocaleDateString()}</td><td>{new Date(cert.expiresAt).toLocaleDateString()}</td><td>{cert.lighthouseScore}</td>
             </tr>
           ))}
         </tbody>

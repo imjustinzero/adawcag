@@ -7,16 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-<<<<<< codex/add-certification-renewal-and-install-tracking
 model AccessibilityCertification {
-  id           String   @id @default(cuid())
-  tenantId      String
-  status        String   @default("active")
-  expiresAt     DateTime
-  renewedAt     DateTime?
-  stripeSubId   String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String   @id @default(cuid())
+  tenantId    String
+  status      String   @default("active")
+  expiresAt   DateTime
+  renewedAt   DateTime?
+  stripeSubId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model InstallEvent {
@@ -30,7 +29,8 @@ model InstallEvent {
 
   @@index([source])
   @@index([createdAt])
-=
+}
+
 model Billing {
   id         String   @id @default(cuid())
   customerId String   @unique
@@ -38,5 +38,38 @@ model Billing {
   plan       String   @default("")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
->>>>>> main
+}
+
+model Scan {
+  id            String   @id @default(cuid())
+  failedAt      DateTime?
+  failureReason String?
+}
+
+model Certificate {
+  id             String   @id @default(cuid())
+  tenantId       String
+  siteId         String
+  scanId         String
+  score          Int
+  issuedAt       DateTime @default(now())
+  expiresAt      DateTime
+  status         String   @default("conditional")
+  type           String   @default("WCAG_2_1_AA")
+  certNumber     String   @unique
+  countersignedBy String?
+  countersignedAt DateTime?
+  createdAt      DateTime @default(now())
+}
+
+model TenantOverride {
+  id            String   @id @default(cuid())
+  tenantId      String
+  pageLimit     Int?
+  sitesAllowed  Int?
+  scanFrequency String?
+  expiresAt     DateTime?
+  reason        String?
+  createdBy     String?
+  createdAt     DateTime @default(now())
 }
