@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { scheduleOnboardingSequence } from '@/lib/email/onboardingSequence';
-import { mapAmountToPlan } from '@/lib/billing/plan';
+import { mapAmountToPlan, type BillingPlan } from '@/lib/billing/plan';
 import { getBillingByCustomer, upsertBillingByCustomer } from '@/lib/billing/store';
 import { processedStripeEvents } from '@/lib/server/runtime-store';
 
@@ -12,10 +12,31 @@ type StripeEvent = {
   };
 };
 
+const PRICE_TO_PLAN: Record<string, Exclude<BillingPlan, ''>> = {
+  [process.env.STRIPE_STARTER_PRICE_ID ?? '']: 'starter',
+  [process.env.STRIPE_PRO_PRICE_ID ?? '']: 'professional',
+  [process.env.STRIPE_AGENCY_PRICE_ID ?? '']: 'agency',
+  [process.env.STRIPE_ENTERPRISE_PRICE_ID ?? '']: 'enterprise',
+};
+
 const CERT_RENEWAL_AMOUNT_CENTS = 29900;
 
 function getSubscriptionUnitAmount(session: any): number | null {
   return session?.items?.[0]?.price?.unit_amount ?? session?.display_items?.[0]?.amount ?? session?.amount_total ?? null;
+}
+
+function resolvePlan(session: any): Exclude<BillingPlan, ''> {
+  const metadataPriceId = String(session?.metadata?.priceId ?? '');
+  const lineItemPriceId = String(session?.items?.[0]?.price?.id ?? '');
+  const mappedFromPrice = PRICE_TO_PLAN[metadataPriceId] ?? PRICE_TO_PLAN[lineItemPriceId];
+  if (mappedFromPrice) return mappedFromPrice;
+
+  const metadataPlan = String(session?.metadata?.plan ?? '').toLowerCase();
+  if (metadataPlan === 'starter' || metadataPlan === 'professional' || metadataPlan === 'agency' || metadataPlan === 'enterprise') {
+    return metadataPlan;
+  }
+
+  return mapAmountToPlan(getSubscriptionUnitAmount(session));
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -35,8 +56,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'MISSING_CUSTOMER' }, { status: 400 });
     }
 
-    const amount = getSubscriptionUnitAmount(session);
     const metadataPlan = session?.metadata?.plan;
+    const amount = getSubscriptionUnitAmount(session);
     const isCertRenewal = metadataPlan === 'cert_renewal' || amount === CERT_RENEWAL_AMOUNT_CENTS;
 
     if (isCertRenewal) {
@@ -44,7 +65,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ ok: true, customerId, renewed: true });
     }
 
-    const plan = mapAmountToPlan(amount);
+    const plan = resolvePlan(session);
     const billing = upsertBillingByCustomer(customerId, { active: true, plan });
 
     await scheduleOnboardingSequence({
@@ -55,7 +76,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     });
 
     processedStripeEvents.add(event.id);
-    return NextResponse.json({ ok: true, customerId, billing, onboardingScheduled: true });
+    return NextResponse.json({ ok: true, customerId, billing, onboardingScheduled: true, plan });
   }
 
   if (event.type === 'customer.subscription.updated') {
