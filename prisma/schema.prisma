@@ -73,3 +73,46 @@ model TenantOverride {
   createdBy     String?
   createdAt     DateTime @default(now())
 }
+
+enum GovPortalMemberRole {
+  Agency_Admin
+  Dept_Manager
+  Viewer
+}
+
+model GovAgency {
+  id             String   @id @default(cuid())
+  agencySlug     String   @unique
+  name           String
+  tenantId       String
+  logoUrl        String?
+  sealUrl        String?
+  primaryColor   String?  @default("#003262")
+  secondaryColor String?  @default("#FDB515")
+  portalTitle    String?
+  createdAt      DateTime @default(now())
+}
+
+model GovPortalMember {
+  id          String              @id @default(cuid())
+  agencyId    String
+  email       String
+  role        GovPortalMemberRole @default(Viewer)
+  department  String?
+  inviteToken String?
+  joinedAt    DateTime?
+  createdAt   DateTime            @default(now())
+
+  @@index([agencyId, email])
+}
+
+model GovPortalAuditLog {
+  id          String   @id @default(cuid())
+  agencyId    String
+  memberEmail String
+  action      String
+  detail      String
+  createdAt   DateTime @default(now())
+
+  @@index([agencyId, createdAt])
+}
