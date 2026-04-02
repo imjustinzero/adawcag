@@ -19,6 +19,10 @@ export default function DashboardPage(): JSX.Element {
             Add site button
           </Link>
         </section>
+        <section className="card" style={{ marginTop: '1rem' }}>
+          <h3 style={{ marginTop: 0 }}>Recent scan history</h3>
+          <p style={{ margin: 0 }}>🖥️ Desktop: 72 · 📱 Mobile: 61</p>
+        </section>
       </main>
     );
   }

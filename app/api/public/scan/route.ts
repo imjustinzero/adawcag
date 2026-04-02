@@ -28,10 +28,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'RATE_LIMITED', message: rateLimit.reason }, { status: 429 });
   }
 
+  const mobileAudit = body.mobile_audit !== false;
   const { job, position, etaMinutes } = enqueueScan('public', scanUrl);
   return NextResponse.json({
     jobId: job.id,
     status: job.status,
+    mobile_audit: mobileAudit,
     queue: {
       position,
       message: position > 0 ? `You're #${position} in queue, ~${etaMinutes} minutes` : 'Scan started',
