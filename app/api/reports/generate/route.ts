@@ -11,9 +11,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const existing = reportPdfUrls.get(reportId);
   if (existing) {
-    return NextResponse.json({ status: 'cached', pdfUrl: existing });
+    return NextResponse.json({ status: 'cached', pdfUrl: existing, sections: ['Desktop Audit', 'Mobile Audit'] });
   }
 
   const job = queuePdf(reportId);
-  return NextResponse.json({ status: 'queued', jobId: job.id });
+  return NextResponse.json({ status: 'queued', jobId: job.id, sections: ['Desktop Audit', 'Mobile Audit'] });
 }
