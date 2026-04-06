@@ -30,12 +30,16 @@ const footerLinks = [
 export default function LocaleLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <header className="container" style={{ display: 'flex', gap: '1rem', padding: '1rem 0', flexWrap: 'wrap' }}>
-        {navLinks.map(([href, label]) => (
-          <Link key={href} href={href}>
-            {label}
-          </Link>
-        ))}
+      <header className="container locale-nav" style={{ backgroundColor: 'var(--bg-primary)' }}>
+        <nav aria-label="Primary navigation">
+          <ul className="locale-nav-list">
+            {navLinks.map(([href, label]) => (
+              <li key={href} className="locale-nav-item">
+                <Link href={href}>{label}</Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </header>
       {children}
       <footer className="container" style={{ display: 'flex', gap: '.75rem', padding: '2rem 0', flexWrap: 'wrap' }}>

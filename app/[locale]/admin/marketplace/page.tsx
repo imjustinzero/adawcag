@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import { marketplaceDevelopers, MarketplaceStatus } from '@/lib/admin/data-store';
+
+export const metadata: Metadata = {
+  title: 'ADAWCAG.org – ADA & WCAG 2.1 Compliance Platform',
+  description: 'ADAWCAG.org provides ADA and WCAG 2.1 compliance scanning, remediation guidance, and reporting.',
+};
+
 
 type SearchParams = { status?: MarketplaceStatus };
 
