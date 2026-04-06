@@ -1,8 +1,15 @@
+import type { Metadata } from 'next';
 import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { addGovAuditLog, getAgencyBySlug, getAgencyStats, verifyGovPortalSession } from '@/lib/gov-portal/store';
+
+export const metadata: Metadata = {
+  title: 'ADAWCAG.org – ADA & WCAG 2.1 Compliance Platform',
+  description: 'ADAWCAG.org provides ADA and WCAG 2.1 compliance scanning, remediation guidance, and reporting.',
+};
+
 
 function toLinePoints(scores: number[]): string {
   if (!scores.length) return '';
